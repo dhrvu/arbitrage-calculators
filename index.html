@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbitrage Calculator</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Arbitrage Calculator</h1>
+            <select class="calculator-selector" id="calculatorSelect">
+                <option value="">Select Calculator</option>
+                <option value="arbitrage">Arbitrage Calculator</option>
+                <option value="kelly">Kelly Criterion</option>
+                <option value="dutching">Dutching Calculator</option>
+                <option value="hedging">Hedging Calculator</option>
+                <option value="bonus">Bonus Bet Calculator</option>
+            </select>
+        </header>
+
+        <!-- Arbitrage Calculator -->
+        <section id="arbitrage" class="calculator-section">
+            <div class="input-group">
+                <label>Total Stake ($)</label>
+                <input type="number" id="arb-stake">
+                <div class="error" id="arb-stake-error"></div>
+            </div>
+            <div class="dynamic-field-container">
+                <div id="arb-odds-container">
+                    <div class="dynamic-field">
+                        <input type="number" placeholder="Odds" class="arb-odds">
+                        <button type="button" onclick="removeArbField(this)" class="remove-field">×</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addArbField()" class="add-field">Add Odds Field</button>
+            </div>
+            <button onclick="calculateArbitrage()">Calculate</button>
+            <div class="results" id="arb-results">
+                <div class="result-item">
+                    <span class="result-label">Result:</span>
+                    <span id="arb-profit" class="result-value"></span>
+                </div>
+                <div id="arb-stakes"></div>
+            </div>
+        </section>
+
+        <!-- Kelly Criterion Calculator -->
+        <section id="kelly" class="calculator-section">
+            <div class="input-group">
+                <label>Bankroll ($)</label>
+                <input type="number" id="kelly-bankroll">
+                <div class="error" id="kelly-bankroll-error"></div>
+            </div>
+            <div class="input-group">
+                <label>Decimal Odds</label>
+                <input type="number" id="kelly-odds">
+                <div class="error" id="kelly-odds-error"></div>
+            </div>
+            <div class="input-group">
+                <label>Win Probability (%)</label>
+                <input type="number" id="kelly-prob">
+                <div class="error" id="kelly-prob-error"></div>
+            </div>
+            <button onclick="calculateKelly()">Calculate</button>
+            <div class="results" id="kelly-results">
+                <div class="result-item">
+                    <span>Optimal Stake:</span>
+                    <span id="kelly-stake" class="result-value"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dutching Calculator -->
+        <section id="dutching" class="calculator-section">
+            <div class="input-group">
+                <label>Total Stake ($)</label>
+                <input type="number" id="dutch-stake">
+                <div class="error" id="dutch-stake-error"></div>
+            </div>
+            <div class="dynamic-field-container">
+                <div id="dutch-odds-container">
+                    <div class="dynamic-field">
+                        <input type="number" placeholder="Odds" class="dutch-odds">
+                        <button type="button" onclick="removeDutchField(this)" class="remove-field">×</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addDutchField()" class="add-field">Add Odds Field</button>
+            </div>
+            <button onclick="calculateDutching()">Calculate</button>
+            <div class="results" id="dutch-results">
+                <div id="dutch-stakes"></div>
+            </div>
+        </section>
+
+        <!-- Hedging Calculator -->
+        <section id="hedging" class="calculator-section">
+            <div class="input-group">
+                <label>Initial Stake ($)</label>
+                <input type="number" id="hedge-initial-stake">
+                <div class="error" id="hedge-initial-error"></div>
+            </div>
+            <div class="input-group">
+                <label>Initial Odds</label>
+                <input type="number" id="hedge-initial-odds">
+                <div class="error" id="hedge-initial-odds-error"></div>
+            </div>
+            <div class="input-group">
+                <label>Current Odds</label>
+                <input type="number" id="hedge-current-odds">
+                <div class="error" id="hedge-current-odds-error"></div>
+            </div>
+            <button onclick="calculateHedging()">Calculate</button>
+            <div class="results" id="hedge-results">
+                <div class="result-item">
+                    <span>Hedge Stake:</span>
+                    <span id="hedge-stake" class="result-value"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Guaranteed:</span>
+                    <span id="hedge-profit" class="result-value"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bonus Bet Calculator -->
+        <section id="bonus" class="calculator-section">
+            <div class="input-group">
+                <label>Bonus Bet Amount ($)</label>
+                <input type="number" id="bonus-amount">
+                <div class="error" id="bonus-amount-error"></div>
+            </div>
+            <div class="input-group">
+                <label>Bonus Bet Odds</label>
+                <input type="number" id="bonus-odds">
+                <div class="error" id="bonus-odds-error"></div>
+            </div>
+            <div class="input-group">
+                <label>Normal Bet Stake ($)</label>
+                <input type="number" id="normal-stake">
+                <div class="error" id="normal-stake-error"></div>
+            </div>
+            <div class="input-group">
+                <label>Normal Bet Odds</label>
+                <input type="number" id="normal-odds">
+                <div class="error" id="normal-odds-error"></div>
+            </div>
+            <button onclick="calculateBonus()">Calculate</button>
+            <div class="results" id="bonus-results">
+                <div class="result-item">
+                    <span>Bonus Return:</span>
+                    <span id="bonus-return" class="result-value"></span>
+                </div>
+                <div class="result-item">
+                    <span>Normal Return:</span>
+                    <span id="normal-return" class="result-value"></span>
+                </div>
+                <div class="result-item">
+                    <span>Total Return:</span>
+                    <span id="total-return" class="result-value"></span>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
